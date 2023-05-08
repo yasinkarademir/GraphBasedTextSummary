@@ -1,10 +1,11 @@
-İstanbul, Türkiye'nin en büyük şehri ve aynı zamanda dünyanın en popüler turistik destinasyonlarından biridir.
-Ayasofya, Osmanlı İmparatorluğu dönemine kadar uzanan tarihi ve mimari açıdan önemli bir yapıdır.
-Kapalıçarşı, dünyanın en eski ve en büyük kapalı pazarlarından biri olarak bilinir.
-Galata Kulesi, İstanbul'un en ünlü simgelerinden biri olup, muhteşem manzarasıyla ünlüdür.
-Topkapı Sarayı, Osmanlı İmparatorluğu'nun yönetim merkezi olarak kullanılmış olan büyük ve ihtişamlı bir yapıdır.
-İstanbul, tarihi ve kültürel zenginlikleri ile ünlüdür ve bu nedenle dünya çapında pek çok turiste ev sahipliği yapar.
-Dolmabahçe Sarayı, 19. yüzyılda inşa edilmiş olan ve bugün müze olarak hizmet veren görkemli bir yapıdır.
-Türkiye'nin ekonomik başkenti olan İstanbul, aynı zamanda kültür ve sanat etkinliklerinin merkezidir.
-İstanbul'da bulunan tarihi ve doğal güzellikler, şehrin turistik cazibesini artıran önemli unsurlardır.
-İstanbul Boğazı, kıtalar arasında köprü görevi gören eşsiz bir coğrafi oluşumdur ve şehrin simgesel güzelliklerinden biridir.
+(Beklenen Girdi):
+Gallery unveils interactive tree.
+
+A Christmas tree that can receive text messages has been unveiled at London's Tate Britain art gallery.
+
+The spruce has an antenna which can receive Bluetooth texts sent by visitors to the Tate. The messages will be "unwrapped" by sculptor Richard Wentworth, who is responsible for decorating the tree with broken plates and light bulbs. It is the 17th year that the gallery has invited an artist to dress their Christmas tree. Artists who have decorated the Tate tree in previous years include Tracey Emin in 2002.
+
+The plain green Norway spruce is displayed in the gallery's foyer. Its light bulb adornments are dimmed, ordinary domestic ones joined together with string. The plates decorating the branches will be auctioned off for the children's charity ArtWorks. Wentworth worked as an assistant to sculptor Henry Moore in the late 1960s. His reputation as a sculptor grew in the 1980s, while he has been one of the most influential teachers during the last two decades. Wentworth is also known for his photography of mundane, everyday subjects such as a cigarette packet jammed under the wonky leg of a table.
+
+(Beklenen Çıktı):
+The messages will be "unwrapped" by sculptor Richard Wentworth, who is responsible for decorating the tree with broken plates and light bulbs.A Christmas tree that can receive text messages has been unveiled at London's Tate Britain art gallery.It is the 17th year that the gallery has invited an artist to dress their Christmas tree.The spruce has an antenna which can receive Bluetooth texts sent by visitors to the Tate.His reputation as a sculptor grew in the 1980s, while he has been one of the most influential teachers during the last two decades.
