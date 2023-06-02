@@ -9,8 +9,8 @@ import mplcursors
 import re
 
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize, sent_tokenize
-from collections import defaultdict, Counter
+from nltk.tokenize import word_tokenize
+from collections import Counter
 import string
 import ssl
 from sklearn.metrics.pairwise import cosine_similarity
@@ -18,6 +18,8 @@ from transformers import BertModel, BertTokenizer
 import nltk
 import numpy as np
 import gensim.downloader as api
+from rouge import Rouge
+from googletrans import Translator
 
 # SSL sertifika hatası düzeltmesi
 try:
@@ -26,8 +28,6 @@ except AttributeError:
     pass
 else:
     ssl._create_default_https_context = _create_unverified_https_context
-
-from rouge import Rouge
 
 nltk.download("stopwords")
 nltk.download("punkt")
@@ -192,7 +192,9 @@ def select_file(root):
 
         expected_input = text.split("(Beklenen Girdi):")[1].split("(Beklenen Çıktı):")[0].strip()
         # print(expected_input.replace(".", "").replace("\n", " ").split(" ")) #inputtaki tüm kelimeler
-
+        print("**" * 20)
+        print(expected_input)
+        print("**" * 20)
         expected_output = text.split("(Beklenen Çıktı):")[1].strip()
 
         # sentences_input = expected_input.split(".")
@@ -253,49 +255,53 @@ def calculate_rouge_score(summary, reference):
 
 
 def display_summary(summary, expected_output):
-    # Cümleleri birleştir
+    # Combine sentences into a single text
     text = " ".join(summary)
     print(text)
 
-    # Rouge skorunu hesaplama
+    # Calculate the rouge score
     rouge_score = calculate_rouge_score(text, expected_output)
     print(rouge_score)
 
-    # Tkinter penceresi oluşturma
-    window = tk.Tk()
-    window.title("Özet")
+    # Translate the summary to Turkish
+    translator = Translator()
+    translation = translator.translate(text, dest='tr')
+    translated_text = translation.text
 
-    # Metni bir etikette gösterme
-    summary_label = tk.Label(window, text=text, wraplength=600)
+    # Create a tkinter window
+    window = tk.Tk()
+    window.title("Summary")
+
+    # Display the original summary text in a label
+    summary_label = tk.Label(window, text="Summary:", font=('Helvetica', 12, 'bold'))
     summary_label.pack()
+    summary_text_label = tk.Label(window, text=text, wraplength=600)
+    summary_text_label.pack()
 
-    # ROUGE skorunu bir etikette gösterme
-    rouge_label = tk.Label(window, text=f"ROUGE Score: {rouge_score}", wraplength=600)
+    # Add a white, thick line for clear distinction
+    canvas1 = tk.Canvas(window, height=10, bg='white')
+    canvas1.create_line(0, 5, 600, 5, fill="white", width=3)
+    canvas1.pack(fill="x", padx=5, pady=5)
+
+    # Display the translated summary
+    translated_label = tk.Label(window, text="Translated Summary:", font=('Helvetica', 12, 'bold'))
+    translated_label.pack()
+    translated_text_label = tk.Label(window, text=translated_text, wraplength=600)
+    translated_text_label.pack()
+
+    # Add another white, thick line
+    canvas2 = tk.Canvas(window, height=10, bg='white')
+    canvas2.create_line(0, 5, 600, 5, fill="white", width=3)
+    canvas2.pack(fill="x", padx=5, pady=5)
+
+    # Display the ROUGE score in a label
+    rouge_label = tk.Label(window, text="ROUGE Score:", font=('Helvetica', 12, 'bold'))
     rouge_label.pack()
+    rouge_score_label = tk.Label(window, text=f"{rouge_score}", wraplength=600)
+    rouge_score_label.pack()
 
-    # Pencereyi ekranda gösterme
+    # Display the window on screen
     window.mainloop()
-
-
-'''
-def display_summary(summary, expected_output):
-    # Cümleleri birleştir
-    text = " ".join(summary)
-    print(text)
-
-    # Tkinter penceresi oluşturma
-    window = tk.Tk()
-    window.title("Özet")
-
-    # Metni bir etikette gösterme
-    label = tk.Label(window, text=text, wraplength=600)
-    label.pack()
-    puan = calculate_rouge_score(text, expected_output)
-    print(puan)
-
-    # Pencereyi ekranda gösterme
-    window.mainloop()
-'''
 
 
 def summarize(sentences, G, top_n=5):
@@ -312,45 +318,6 @@ def summarize(sentences, G, top_n=5):
     summary = [sentences[index]["sentence"] for _, index in ranked_sentences[:top_n]]
 
     return summary
-
-
-'''
-def summarize2(sentences, similarity_dict, top_n=5):
-    # Cümle skorlarını tutan bir sözlük oluştur
-    sentence_scores = {}
-
-    # Her cümle için, diğer tüm cümlelerle olan benzerliklerin toplamını hesapla
-    for pair, similarity in similarity_dict.items():
-        if pair[0] not in sentence_scores:
-            sentence_scores[pair[0]] = 0
-        if pair[1] not in sentence_scores:
-            sentence_scores[pair[1]] = 0
-        sentence_scores[pair[0]] += similarity
-        sentence_scores[pair[1]] += similarity
-
-    # Cümleleri skorlarına göre sırala
-    ranked_sentences = sorted(((score, index) for index, score in sentence_scores.items()), reverse=True)
-
-    # En yüksek skorlu cümleleri özete ekle
-    summary = [sentences[index]["sentence"] for _, index in ranked_sentences[:top_n]]
-
-    return summary
-'''
-
-'''
-def summarize1(sentences, G, top_n=5):
-    # PageRank algoritmasını uygula
-    pagerank_scores = nx.pagerank(G)
-
-    # Cümleleri PageRank skorlarına göre sırala
-    ranked_sentences = sorted(((score, index) for index, score in pagerank_scores.items()), reverse=True)
-
-    # En yüksek skorlu cümleleri özete ekle
-    summary = [sentences[index]["sentence"] for _, index in ranked_sentences[:top_n]]
-
-    return summary
-    
-'''
 
 
 def create_similarity_graph(similarity_dict, threshold):
@@ -393,27 +360,6 @@ def visualize_similarity_graph(G):
     canvas.draw()
     canvas.get_tk_widget().pack()
 
-
-'''
-def visualize_similarity_graph(G):
-    new_window = tk.Toplevel(root)
-    new_window.geometry("500x500")
-    new_window.title("Benzerlik Grafiği")
-    new_window.config(background="#000000")
-    new_window.iconbitmap("icon.ico")
-    new_window.wm_attributes("-alpha", 0.9)
-
-    fig = Figure(figsize=(30, 30))
-
-    ax = fig.add_subplot(111)
-
-    pos = nx.spring_layout(G)
-    nx.draw(G, pos, with_labels=True, ax=ax)
-
-    canvas = FigureCanvasTkAgg(fig, master=new_window)
-    canvas.draw()
-    canvas.get_tk_widget().pack()
-'''
 
 root = tk.Tk()
 
